@@ -1,0 +1,13 @@
+An immutable distributed collection of objects.
+-Split it partitions which may be on Multiple nodes
+-Can contain any data type:
+->Python,
+->Java,
+->Scala objects
+->including user defined classes
+RDD Can be persisted in memory
+-RDD Auto recover from node failures
+-Can have any type but has a special dataset type for key-value
+-Supports two type of operations:
++Transformation
++Action
