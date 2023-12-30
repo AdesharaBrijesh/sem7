@@ -1,0 +1,76 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<ctype.h>	
+
+int isKeyword(char buffer[]){
+  char keywords[32][10] = {"auto","break","case","char","const","continue","default",
+  "do","double","else","enum","extern","float","for","goto",
+  "if","int","long","register","return","short","signed",
+  "sizeof","static","struct","switch","typedef","union",
+  "unsigned","void","volatile","while"};
+  int i, flag = 0;
+  
+  for(i = 0; i < 32; ++i){
+    if(strcmp(keywords[i], buffer) == 0){
+      flag = 1;
+      break;
+    }
+  }
+  
+  return flag;
+}
+
+int main(){
+    char ch, buffer1[100], buffer2[100], operators[] = "+-*/%=", special_char[] = "!@#$%^&*(){}[];:<>?/\\"; // \"\'";
+  FILE *fp;
+  int i,j=0,k=0, l=0;
+  
+  fp = fopen("code.txt","r");
+  
+  if(fp == NULL){
+    printf("error while opening the file\n");
+    exit(0);
+  }
+  
+  while((ch = fgetc(fp)) != EOF){
+
+   for(i = 0; i < 6; ++i){
+     if(ch == operators[i])
+       printf("%c is operator\n", ch);
+   }
+   
+   for(i = 0; i < 23; ++i){
+     if(ch == special_char[i])
+       printf("%c is special character\n", ch);
+   }
+
+   if(isalpha(ch) || ch == '\"' || ch == '\''){
+     buffer1[j++] = ch;
+   }
+   else if((ch == ' ' || ch == '\n' || ch == '=' || ch == '(' || ch == ';') && (j != 0)){
+     buffer1[j] = '\0';
+     j = 0;
+     
+     if(isKeyword(buffer1) == 1)
+       printf("%s is keyword\n", buffer1);
+     else if(buffer1[0] == '\"')
+        printf("%s is string\n", buffer1);
+      else if(buffer1[0] == '\'')
+        printf("%s is character\n", buffer1);
+     else
+       printf("%s is identifier\n", buffer1);
+   }
+
+   if(isdigit(ch) || ch == '.'){
+      buffer2[k++] = ch;
+   }
+   else if((ch == '\n' || ch == '=' || ch == ';') && (k != 0)){
+      buffer2[k] = '\0';
+      k=0;
+      printf("%s is constant\n",buffer2);
+   } 
+ }
+ fclose(fp);
+ return 0;
+}
